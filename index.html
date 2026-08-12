@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Công cụ nén ảnh offline chuyên nghiệp hỗ trợ JPEG, PNG, GIF, WebP, BMP, TIFF, HEIC">
+    <meta name="keywords" content="nén ảnh, tối ưu hóa hình ảnh, Dim Paris">
+    <meta name="author" content="YT Paris Fashion">
+    <title data-lang="title">Professional Offline Image Compression - ThaiThong</title>
+    <link rel="stylesheet" href="script/styles.css">
+    <link rel="icon" type="image/png" href="script/favicon.webp">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Language Switcher -->
+        <div class="lang-switcher">
+            <select id="langSelect" onchange="switchLanguage(this.value)">
+                <option value="vi" data-flag="script/vn.png" title="VI">Vietnamese (VI)</option>
+                <option value="en" selected data-flag="script/en.png" title="EN">English (EN)</option>
+                <option value="fr" data-flag="script/fr.png" title="FR">French (FR)</option>
+            </select>
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+            <img src="script/YT-logo-500x281.png" alt="Dim Paris Logo" class="logo" loading="lazy">
+            <h1 data-lang="headerTitle">Image Optimization Tool</h1>
+        </div>
+        <p data-lang="description1">Supports compression while preserving formats: JPEG, PNG, GIF, WebP, BMP, TIFF, HEIC with high quality.</p>
+        <p data-lang="description2">Upload images, wait for compression to complete, and use the slider to compare.</p>
+
+        <!-- Main Upload Zone -->
+        <div class="upload-area" id="uploadArea">
+            <input type="file" id="imageInput" accept="image/*" multiple>
+            <p data-lang="uploadText">Drag and drop images here or click to select</p>
+        </div>
+
+        <!-- Image Table Details -->
+        <div class="image-table" id="imageTable" style="display: none;">
+            <div class="table-header">
+                <span id="headerFileName">File Name</span>
+                <span id="headerOriginalSize">Original Size</span>
+                <span id="headerOriginalFileSize">Original File Size</span>
+                <span id="headerResizedSize">Resized Size</span>
+                <span id="headerCompressedSize">Compressed Size</span>
+            </div>
+            <div class="table-body" id="tableBody"></div>
+        </div>
+
+        <!-- Summary -->
+        <div class="size-summary" id="sizeSummary" style="display: none;">
+            <div id="totalOriginalSize"></div>
+            <div id="totalCompressedFooter"></div>
+        </div>
+
+        <!-- Preview & Editor Section -->
+        <div class="preview-section" id="previewSection" style="display: none;">
+            <div class="preview" id="preview">
+                <div class="preview-header">
+                    <button onclick="saveAllCompressedImages()" class="save-all-btn" data-lang="saveAllBtn">Save All Images</button>
+                    <button onclick="compressAllImages()" class="compress-main-btn" data-lang="compressAllBtn">⚡ Compress All</button>
+                </div>
+                <div class="comparison">
+                    <div class="image-box">
+                        <h3 data-lang="compareTitle">Compare Images</h3>
+                        <div class="slider-container" id="sliderContainer">
+                            <div class="loading" id="loading" style="display: none;" data-lang="loading">Processing...</div>
+                            <img id="previewOriginalImg" class="comparison-img" alt="Original Image" loading="lazy">
+                            <img id="previewCompressedImg" class="comparison-img" alt="Compressed Image" loading="lazy">
+                            <div class="slider" id="slider"></div>
+                            <div class="notification" id="notification" style="display: none;"></div>
+                        </div>
+                        <p>
+                            <span data-lang="originalLabel">Original</span>: <span id="previewOriginalSize">0 KB</span> |
+                            <span data-lang="compressedLabel">Compressed</span>: <span id="previewCompressedSize">0 KB</span>
+                            <span id="reductionPercent"></span>
+                        </p>
+                    </div>
+
+                    <!-- Image Tuning Controls -->
+                    <div class="controls" id="controls">
+                        <!-- Quality Control -->
+                        <div class="quality-wrapper">
+                            <label for="quality" data-lang="qualityLabel" title="">Quality (%):</label>
+                            <input type="range" id="quality" min="1" max="100" value="50">
+                            <span id="qualityValue">50%</span>
+                        </div>
+
+                        <!-- Additional Resizing Controls -->
+                        <div class="resize-inputs">
+                            <label for="resizeWidth" data-lang="widthLabel" title="">Width:</label>
+                            <input type="number" id="resizeWidth" placeholder="Width (px)" data-lang-placeholder="widthPlaceholder" inputmode="numeric">
+
+                            <label for="resizeHeight" data-lang="heightLabel" title="">Height:</label>
+                            <input type="number" id="resizeHeight" placeholder="Height (px)" data-lang-placeholder="heightPlaceholder" inputmode="numeric">
+
+                            <!-- PPI -->
+                            <label for="ppiSelect" data-lang="ppiLabel" title="">PPI:</label>
+                            <select id="ppiSelect" title="">
+                                <option value="300" selected data-lang-title="ppi300">300 PPI</option>
+                                <option value="326" data-lang-title="ppi326">326 PPI</option>
+                                <option value="600" data-lang-title="ppi600">600 PPI</option>
+                                <option value="1200" data-lang-title="ppi1200">1200 PPI</option>
+                            </select>
+                        </div>
+
+                        <!-- Additional Edit Controls -->
+                        <div class="edit-buttons">
+                            <button onclick="openRotatePopup()" class="rotate-btn" data-lang="rotateBtn" title="">
+                                <span class="icon">⟳</span> Rotate Image
+                            </button>
+                            <button onclick="openCropPopup()" class="crop-btn" data-lang="cropBtn" title="">
+                                <span class="icon">✂</span> Crop Image
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Promo/Support Toggle Button -->
+        <button class="promo-toggle-btn" onclick="togglePromoSection()">
+            <span>🚀 Khám phá ứng dụng khác & Hỗ trợ tác giả</span>
+            <span id="toggleIcon">▼</span>
+        </button>
+
+        <!-- Promo Section -->
+        <div class="promo-section hidden" id="promoSection">
+            <h2>🚀 Ứng dụng khác của tôi</h2>
+            <p class="subtitle">Khám phá thêm các tool hữu ích · Explore more useful tools</p>
+           
+            <div class="apps-grid">
+                <a href="https://github.com/ThaiThongSJ/YT-Premium-Ultra" target="_blank" rel="noopener" class="app-card">
+                    <div class="app-icon">▶️</div>
+                    <h3>YT Premium Ultra</h3>
+                    <p>YouTube Premium trải nghiệm mượt mà, không quảng cáo, chất lượng cao.</p>
+                    <span class="btn-link">Xem trên GitHub →</span>
+                </a>
+                <a href="https://github.com/ThaiThongSJ/Pitch-Shifter-Daimon" target="_blank" rel="noopener" class="app-card">
+                    <div class="app-icon">🎵</div>
+                    <h3>Pitch Shifter Daimon</h3>
+                    <p>Công cụ chỉnh cao độ âm thanh chuyên nghiệp, dễ sử dụng.</p>
+                    <span class="btn-link">Xem trên GitHub →</span>
+                </a>
+                <a href="https://github.com/ThaiThongSJ/La-Kinh-Phong-Thuy" target="_blank" rel="noopener" class="app-card">
+                    <div class="app-icon">🧭</div>
+                    <h3>La Kinh Phong Thủy</h3>
+                    <p>Ứng dụng la bàn phong thủy chính xác, hỗ trợ xem hướng nhà.</p>
+                    <span class="btn-link">Xem trên GitHub →</span>
+                </a>
+                <a href="https://github.com/ThaiThongSJ/REMOVEADBLOCK-YOUTUBE-PRO" target="_blank" rel="noopener" class="app-card">
+                    <div class="app-icon">🚫</div>
+                    <h3>RemoveAdblock YouTube Pro</h3>
+                    <p>Chặn quảng cáo YouTube mạnh mẽ, trải nghiệm xem video mượt mà.</p>
+                    <span class="btn-link">Xem trên GitHub →</span>
+                </a>
+            </div>
+
+            <!-- Support box -->
+            <div class="support-box">
+                <h3>💰 Hỗ trợ dự án / Support the Project</h3>
+                <p><strong>Author:</strong> Thái Thông</p>
+                <p><strong>Email:</strong> <a href="mailto:ThaiThongsj@gmail.com" style="color:#ffd700;">ThaiThongsj@gmail.com</a></p>
+                <p class="bank">Vietcombank: 9898661918 — NGUYỄN NGỌC THÁI THÔNG</p>
+                <p class="thanks">Thank you for using our tools! Enjoy an ultra-smooth experience. ✨<br>Made with ❤️ for a better web</p>
+            </div>
+        </div>
+
+        <p class="footer-text">
+            Developed by ThaiThong<br>
+            Apps by <strong>Thái Thông</strong> · <a href="mailto:ThaiThongsj@gmail.com">ThaiThongsj@gmail.com</a>
+        </p>
+    </div>
+
+    <!-- Rotate Popup -->
+    <div id="rotatePopup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closeRotatePopup()">×</span>
+            <h3 data-lang="rotateTitle">Rotate & Flip Image</h3>
+            <div class="rotate-canvas-container">
+                <canvas id="rotateCanvas"></canvas>
+            </div>
+            <div class="rotate-controls">
+                <div class="control-group tool-group">
+                    <button id="rotate90" class="btn-tool" onclick="rotateImage(90)" title="Xoay 90°">90°</button>
+                    <button id="rotate180" class="btn-tool" onclick="rotateImage(180)" title="Xoay 180°">180°</button>
+                    <button id="rotate270" class="btn-tool" onclick="rotateImage(270)" title="Xoay 270°">270°</button>
+                    <span class="divider">|</span>
+                    <button id="flipHBtn" class="btn-tool" onclick="toggleFlipH()" title="Lật ngang">↔</button>
+                    <button id="flipVBtn" class="btn-tool" onclick="toggleFlipV()" title="Lật dọc">↕</button>
+                </div>
+                <div class="control-group custom-angle-group">
+                    <input type="number" id="customAngle" placeholder="Góc (°)" min="-360" max="360">
+                    <button data-lang="previewBtn" class="btn-secondary" onclick="previewRotate()" title="">Xem trước</button>
+                    <button data-lang="ResetBtn" class="btn-secondary" onclick="resetRotate()" title="">Đặt lại</button>
+                </div>
+                <div class="control-group action-group">
+                    <button data-lang="resetImageBtn" class="btn-danger" onclick="resetImage()" title="">Khôi phục ảnh gốc</button>
+                    <button data-lang="applyBtn" class="btn-primary" onclick="applyRotate()" title="">Áp dụng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Crop Popup -->
+    <div id="cropPopup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closeCropPopup()">×</span>
+            <h3 data-lang="cropTitle">Crop Image</h3>
+            <div class="crop-container">
+                <canvas id="cropCanvas"></canvas>
+                <div id="cropOverlay" class="crop-overlay">
+                    <div id="rulerHorizontal" class="ruler ruler-horizontal"></div>
+                    <div id="rulerVertical" class="ruler ruler-vertical"></div>
+                    <div class="handle top-left"></div>
+                    <div class="handle top-right"></div>
+                    <div class="handle bottom-left"></div>
+                    <div class="handle bottom-right"></div>
+                </div>
+            </div>
+            <div class="crop-controls">
+                <button id="resetCrop" data-lang="ResetBtn">Reset</button>
+                <button id="applyCrop" data-lang="applyBtn">Apply</button>
+                <button data-lang="resetImageBtn" onclick="resetImage()">Reset Image</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-content">
+            <p id="loadingMessage">Processing...</p>
+            <progress id="loadingProgress" max="100" value="0"></progress>
+            <p id="loadingDetails"></p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script defer src="script/jszip.min.js"></script>
+    <script defer src="script/FileSaver.min.js"></script>
+    <script defer src="script/UTIF.js"></script>
+    <script defer src="script/heic2any.min.js"></script>
+    <script defer src="script/pako.min.js"></script>
+    <script defer src="script/UPNG.js"></script>
+    <script defer src="script/script.js"></script>
+    <script>
+        function togglePromoSection() {
+            const promo = document.getElementById('promoSection');
+            const icon = document.getElementById('toggleIcon');
+            if (promo.classList.contains('hidden')) {
+                promo.classList.remove('hidden');
+                icon.textContent = '▲';
+            } else {
+                promo.classList.add('hidden');
+                icon.textContent = '▼';
+            }
+        }
+        window.addEventListener('error', (e) => {
+            if (e.target && e.target.tagName === 'SCRIPT') {
+                const notification = document.getElementById('notification');
+                if (!notification) return;
+                const langSelect = document.querySelector('#langSelect');
+                const lang = langSelect ? langSelect.value : 'en';
+                const messages = {
+                    vi: `Không thể tải ${e.target.src}. Vui lòng thử lại!`,
+                    en: `Failed to load ${e.target.src}. Please try again!`,
+                    fr: `Échec du chargement de ${e.target.src}. Veuillez réessayer !`
+                };
+                notification.textContent = messages[lang] || messages['en'];
+                notification.style.display = 'block';
+                notification.classList.add('show');
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    notification.style.display = 'none';
+                }, 5000);
+            }
+        }, true);
+    </script>
+</body>
+</html>
