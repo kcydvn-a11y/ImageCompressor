@@ -1,6 +1,6 @@
 # 🖼️ **Image Optimization Tool**
 **Công cụ Nén & Tối Ưu Ảnh Offline Chuyên Nghiệp**
-
+![App](app.jpg)
 > Nén ảnh giữ nguyên định dạng, chất lượng cao, hỗ trợ đầy đủ JPEG • PNG • GIF • WebP • BMP • TIFF • HEIC.  
 > Hoạt động hoàn toàn offline, không cần tải lên server.
 
@@ -88,6 +88,7 @@
 - **Email:** [ThaiThongsj@gmail.com](mailto:ThaiThongsj@gmail.com)
 
 **Ủng hộ dự án:**  
+![Bank Support](bank.png)
 `9898661918` • **Vietcombank** (NGUYỄN NGỌC THÁI THÔNG)
 
 ---
