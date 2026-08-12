@@ -3,7 +3,7 @@
 ![App](app.jpg)
 > Nén ảnh giữ nguyên định dạng, chất lượng cao, hỗ trợ đầy đủ JPEG • PNG • GIF • WebP • BMP • TIFF • HEIC.  
 > Hoạt động hoàn toàn offline, không cần tải lên server.
-
+https://kcydvn-a11y.github.io/ImageCompressor/
 **Tác giả:** Thái Thông  
 **Thương hiệu:** DIM Paris Fashion
 
