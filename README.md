@@ -2,7 +2,8 @@
 **Công cụ Nén & Tối Ưu Ảnh Offline Chuyên Nghiệp**
 ---
 https://kcydvn-a11y.github.io/ImageCompressor/
-![App](app1.png)
+
+![App](app.jpg)
 > Nén ảnh giữ nguyên định dạng, chất lượng cao, hỗ trợ đầy đủ JPEG • PNG • GIF • WebP • BMP • TIFF • HEIC.  
 > Hoạt động hoàn toàn offline, không cần tải lên server.
 **Tác giả:** Thái Thông  
